@@ -84,7 +84,7 @@ public:
 
     const String getApplicationName() override              { return appName; }
     const String getApplicationVersion() override           { return JucePlugin_VersionString; }
-    bool moreThanOneInstanceAllowed() override              { return true; }
+    bool moreThanOneInstanceAllowed() override              { return false; }
     void anotherInstanceStarted (const String&) override    {}
 
     virtual StandaloneFilterWindow* createWindow()
