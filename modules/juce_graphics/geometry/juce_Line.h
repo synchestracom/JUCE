@@ -129,10 +129,10 @@ public:
     ValueType getLengthSquared() const noexcept                             { return start.getDistanceSquaredFrom (end); }
 
     /** Returns true if the line's start and end x coordinates are the same. */
-    bool isVertical() const noexcept                                        { return start.x == end.x; }
+    bool isVertical() const noexcept                                        { return exactlyEqual(start.x, end.x); }
 
     /** Returns true if the line's start and end y coordinates are the same. */
-    bool isHorizontal() const noexcept                                      { return start.y == end.y; }
+    bool isHorizontal() const noexcept                                      { return exactlyEqual(start.y, end.y); }
 
     /** Returns the line's angle.
 
