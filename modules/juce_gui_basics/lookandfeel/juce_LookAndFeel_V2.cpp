@@ -1605,7 +1605,9 @@ class LookAndFeel_V2::SliderLabelComp final : public Label
 public:
     SliderLabelComp() : Label ({}, {}) {}
 
-    void mouseWheelMove (const MouseEvent&, const MouseWheelDetails&) override {}
+    void mouseWheelMove (const MouseEvent& e, const MouseWheelDetails& wheel) override {
+        getParentComponent()->mouseWheelMove(e, wheel);
+    }
 
     std::unique_ptr<AccessibilityHandler> createAccessibilityHandler() override
     {
