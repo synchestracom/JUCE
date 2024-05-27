@@ -268,9 +268,9 @@ bool DirectoryContentsList::addFile (const File& file, const bool isDir,
            #endif
 
             //TODO put back sort by name
-            //return a->filename.compareNatural (b->filename) < 0;
+            return a->filename.compareNatural (b->filename) < 0;
             
-            return a->modificationTime >= b->modificationTime; 
+            //return a->modificationTime >= b->modificationTime;
         });
 
         return true;
