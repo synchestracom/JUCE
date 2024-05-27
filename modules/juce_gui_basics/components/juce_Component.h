@@ -687,7 +687,7 @@ public:
     /** Looks for a child component with the specified ID.
         @see setComponentID, getComponentID
     */
-    Component* findChildWithID (StringRef componentID) const noexcept;
+    Component* findChildWithID (StringRef componentID, bool recursive = false) const noexcept;
 
     /** Adds a child component to this one.
 

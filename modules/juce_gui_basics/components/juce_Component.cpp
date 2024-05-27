@@ -224,6 +224,9 @@ void Component::setComponentID (const String& newID)
 
 void Component::setVisible (bool shouldBeVisible)
 {
+    if (componentID == "Work Settings")
+        int i = 0;
+    
     if (flags.visibleFlag != shouldBeVisible)
     {
         // if component methods are being called from threads other than the message
@@ -1305,11 +1308,16 @@ int Component::getIndexOfChildComponent (const Component* child) const noexcept
     return childComponentList.indexOf (const_cast<Component*> (child));
 }
 
-Component* Component::findChildWithID (StringRef targetID) const noexcept
+Component* Component::findChildWithID (StringRef targetID, bool recursive) const noexcept
 {
     for (auto* c : childComponentList)
         if (c->componentID == targetID)
             return c;
+        else {
+            if (recursive)
+                if (auto subchild = c->findChildWithID(targetID, recursive); subchild != nullptr)
+                    return subchild;
+        }
 
     return nullptr;
 }
