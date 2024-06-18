@@ -733,7 +733,7 @@ public:
                             bool autoOpenMidiDevices = false
                            #endif
                             )
-        : DocumentWindow (title, backgroundColour, DocumentWindow::minimiseButton | DocumentWindow::closeButton),
+        : DocumentWindow (title, backgroundColour, DocumentWindow::allButtons),
           optionsButton ("Options")
     {
         setConstrainer (&decoratorConstrainer);
@@ -741,7 +741,7 @@ public:
        #if JUCE_IOS || JUCE_ANDROID
         setTitleBarHeight (0);
        #else
-        setTitleBarButtonsRequired (DocumentWindow::minimiseButton | DocumentWindow::closeButton, false);
+        setTitleBarButtonsRequired (DocumentWindow::allButtons, false);
 
         Component::addAndMakeVisible (optionsButton);
         optionsButton.addListener (this);
