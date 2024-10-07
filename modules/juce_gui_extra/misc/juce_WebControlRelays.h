@@ -96,14 +96,14 @@ public:
 
     /** @internal */
     void emitEvent (const var& payload);
-
+    
+    String name;
 private:
     void handleEvent (const var& event);
     void webViewConstructed (WebBrowserComponent*) override;
     void webViewDestructed (WebBrowserComponent*) override;
 
     WebBrowserComponent* browser = nullptr;
-    String name;
     float value{};
     Identifier eventId { "__juce__slider" + name };
     ListenerList<Listener> listeners;
