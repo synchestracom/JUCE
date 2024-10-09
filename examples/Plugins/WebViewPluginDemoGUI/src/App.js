@@ -50,10 +50,56 @@ import * as Juce from "juce-framework-frontend";
 
 import "./App.css";
 
-// Custom attributes in React must be in all lower case
-const controlParameterIndexAnnotation = "controlparameterindex";
 
-function JuceSlider({ identifier, title }) {
+
+
+
+
+
+// Yannick, this is what I added to the demo /////////////////////////////////
+
+const setValueTreeProperty = Juce.getNativeFunction("setValueTreeProperty");
+
+function MyItem() {
+  const cb = <Checkbox   />;
+  let valueTreeListener = new ValueTreeListener();
+  return (
+    <Box>
+      <FormGroup>
+        <FormControlLabel control={cb}  />
+        my item
+      </FormGroup>
+    </Box>
+  );
+}
+
+const ValueTreePropertyChanged_eventId = "valueTreePropertyChanged";
+class ValueTreeListener {// eslint-disable-line no-unused-vars
+  constructor() {
+
+    this.valueTreePropertyChangedRegistrationId = window.__JUCE__.backend.addEventListener(
+      ValueTreePropertyChanged_eventId,
+      (event) => {
+        event;// eslint-disable-line no-unused-vars
+      }
+    );
+  }
+  unregister() {
+    window.__JUCE__.backend.removeEventListener(
+      this.valueTreePropertyChangedRegistrationId
+    );
+  }
+}
+
+////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+function JuceSlider({ identifier, title }) {// eslint-disable-line no-unused-vars
   JuceSlider.propTypes = {
     identifier: PropTypes.string,
     title: PropTypes.string,
@@ -97,12 +143,7 @@ function JuceSlider({ identifier, title }) {
   }
 
   return (
-    <Box
-      {...{
-        [controlParameterIndexAnnotation]:
-          sliderState.properties.parameterIndex,
-      }}
-    >
+    <Box sx={{ height: 100 }}>
       <Typography sx={{ mt: 1.5 }}>
         {properties.name}: {sliderState.getScaledValue()} {properties.label}
       </Typography>
@@ -116,12 +157,18 @@ function JuceSlider({ identifier, title }) {
         step={1 / (properties.numSteps - 1)}
         onChangeCommitted={changeCommitted}
         onMouseDown={mouseDown}
+        // sx={{
+        //   '& input[type="range"]': {
+        //     WebkitAppearance: 'slider-vertical',
+        //   },
+        // }}
+        // orientation="vertical"
       />
     </Box>
   );
 }
 
-function JuceCheckbox({ identifier }) {
+function JuceCheckbox({ identifier }) {// eslint-disable-line no-unused-vars
   JuceCheckbox.propTypes = {
     identifier: PropTypes.string,
   };
@@ -154,12 +201,7 @@ function JuceCheckbox({ identifier }) {
   const cb = <Checkbox checked={value} onChange={handleChange} />;
 
   return (
-    <Box
-      {...{
-        [controlParameterIndexAnnotation]:
-          checkboxState.properties.parameterIndex,
-      }}
-    >
+    <Box>
       <FormGroup>
         <FormControlLabel control={cb} label={properties.name} />
       </FormGroup>
@@ -167,7 +209,7 @@ function JuceCheckbox({ identifier }) {
   );
 }
 
-function JuceComboBox({ identifier }) {
+function JuceComboBox({ identifier }) {// eslint-disable-line no-unused-vars
   JuceComboBox.propTypes = {
     identifier: PropTypes.string,
   };
@@ -198,12 +240,7 @@ function JuceComboBox({ identifier }) {
   });
 
   return (
-    <Box
-      {...{
-        [controlParameterIndexAnnotation]:
-          comboBoxState.properties.parameterIndex,
-      }}
-    >
+    <Box>
       <FormControl fullWidth>
         <InputLabel id={identifier}>{properties.name}</InputLabel>
         <Select
@@ -223,8 +260,6 @@ function JuceComboBox({ identifier }) {
   );
 }
 
-const sayHello = Juce.getNativeFunction("sayHello");
-
 const SpectrumDataReceiver_eventId = "spectrumData";
 
 function interpolate(a, b, s) {
@@ -242,7 +277,7 @@ function mod(dividend, divisor) {
   return dividend - divisor * quotient;
 }
 
-class SpectrumDataReceiver {
+class SpectrumDataReceiver {// eslint-disable-line no-unused-vars
   constructor(bufferLength) {
     this.bufferLength = bufferLength;
     this.buffer = new Array(this.bufferLength);
@@ -251,29 +286,32 @@ class SpectrumDataReceiver {
     this.lastTimeStampMs = 0;
     this.timeResolutionMs = 0;
 
-    let self = this;
+    //let self = this;
     this.spectrumDataRegistrationId = window.__JUCE__.backend.addEventListener(
       SpectrumDataReceiver_eventId,
       () => {
-        fetch(Juce.getBackendResourceAddress("spectrumData.json"))
-          .then((response) => response.text())
-          .then((text) => {
-            const data = JSON.parse(text);
 
-            if (self.timeResolutionMs == 0) {
-              self.timeResolutionMs = data.timeResolutionMs;
+        //Yannick, I've commented this SpectrumData code for testing, see original code in Juce original demo
 
-              // We want to stay behind the write index by a full batch plus one
-              // so that we can keep reading buffered frames until we receive the
-              // new batch
-              self.readIndex = -data.frames.length - 1;
+        // fetch(Juce.getBackendResourceAddress("spectrumData.json"))
+        //   .then((response) => response.text())
+        //   .then((text) => {
+        //     const data = JSON.parse(text);
 
-              self.buffer.fill(new Array(data.frames[0].length).fill(0));
-            }
+        //     if (self.timeResolutionMs == 0) {
+        //       self.timeResolutionMs = data.timeResolutionMs;
 
-            for (const f of data.frames)
-              self.buffer[mod(self.writeIndex++, self.bufferLength)] = f;
-          });
+        //       // We want to stay behind the write index by a full batch plus one
+        //       // so that we can keep reading buffered frames until we receive the
+        //       // new batch
+        //       self.readIndex = -data.frames.length - 1;
+
+        //       self.buffer.fill(new Array(data.frames[0].length).fill(0));
+        //     }
+
+        //     for (const f of data.frames)
+        //       self.buffer[mod(self.writeIndex++, self.bufferLength)] = f;
+        //   });
       }
     );
   }
@@ -378,14 +416,6 @@ function FreqBandInfo() {
 }
 
 function App() {
-  const controlParameterIndexUpdater = new Juce.ControlParameterIndexUpdater(
-    controlParameterIndexAnnotation
-  );
-
-  document.addEventListener("mousemove", (event) => {
-    controlParameterIndexUpdater.handleMouseMove(event);
-  });
-
   const [open, setOpen] = useState(false);
   const [snackbarMessage, setMessage] = useState("No message received yet");
 
@@ -417,22 +447,15 @@ function App() {
   return (
     <div>
       <Container>
-        <JuceSlider identifier="cutoffSlider" title="Cutoff" />
+        {
+        /* Yannick, maybe we will use these Juce widgets later, ex if volume sliders send too much data when dragged
+        
+        <JuceSlider   identifier="track_270496_volumeSlider"/>
+        <JuceCheckbox identifier="track_270496_muteButton" />
+        <JuceComboBox identifier="track_270496_aComboBoxParameter" />
+
+        */}
       </Container>
-      <CardActions style={{ justifyContent: "center" }}>
-        <Button
-          variant="contained"
-          sx={{ marginTop: 2 }}
-          onClick={() => {
-            sayHello("JUCE").then((result) => {
-              setMessage(result);
-              openSnackbar();
-            });
-          }}
-        >
-          Call backend function
-        </Button>
-      </CardActions>
       <CardActions style={{ justifyContent: "center" }}>
         <Button
           variant="contained"
@@ -446,13 +469,58 @@ function App() {
               });
           }}
         >
-          Fetch data from backend
+          Get ValueTree
         </Button>
       </CardActions>
-      <JuceCheckbox identifier="muteToggle" />
+      <CardActions style={{ justifyContent: "center" }}>
+
+        <Button
+          variant="contained"
+          sx={{ marginTop: 2 }}
+          onClick={() => {
+            setValueTreeProperty("FOLDERTRACK", "270495", "mute", "1").then((result) => {
+              setMessage(result);
+              openSnackbar();
+            });
+          }}
+        >
+          Mute
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ marginTop: 2 }}
+          onClick={() => {
+            setValueTreeProperty("FOLDERTRACK", "270495", "mute", "0").then((result) => {
+              setMessage(result);
+              openSnackbar();
+            });
+          }}
+        >
+          Un-mute
+        </Button>
+      </CardActions>
+      <CardActions style={{ justifyContent: "center" }}>
+        <Button
+          variant="contained"
+          sx={{ marginTop: 2 }}
+          onClick={() => {
+            setValueTreeProperty("WRONG_TREE_TYPE", "270495", "mute", "0").then((result) => {
+              setMessage(result);
+              openSnackbar();
+            });
+          }}
+        >
+          Wrong tree type
+        </Button>
+        <MyItem></MyItem>
+      </CardActions>
       <br></br>
-      <JuceComboBox identifier="filterTypeCombo" />
-      <FreqBandInfo></FreqBandInfo>
+      
+      <CardActions style={{ justifyContent: "center" }}>
+        {/* Yannick, this is to highlight the frequencies of the audio signal. Not working anymore.
+          Maybe we could use this later, to highlight instead the instruments that are currently playing  */}
+        <FreqBandInfo></FreqBandInfo>
+      </CardActions>
       <Snackbar
         open={open}
         autoHideDuration={6000}

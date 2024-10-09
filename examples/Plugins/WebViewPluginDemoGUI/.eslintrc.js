@@ -44,6 +44,7 @@ module.exports = {
   },
   plugins: ["react"],
   rules: {
+    "no-unused-vars": "off",
     "no-extra-semi": "error",
   },
 };
