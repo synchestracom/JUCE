@@ -456,7 +456,7 @@ function App() {
 
         */}
       </Container>
-      <CardActions style={{ justifyContent: "center" }}>
+      {/* <CardActions style={{ justifyContent: "center" }}>
         <Button
           variant="contained"
           sx={{ marginTop: 2 }}
@@ -471,35 +471,83 @@ function App() {
         >
           Get ValueTree
         </Button>
-      </CardActions>
+      </CardActions> */}
       <CardActions style={{ justifyContent: "center" }}>
 
         <Button
           variant="contained"
           sx={{ marginTop: 2 }}
           onClick={() => {
-            setValueTreeProperty("FOLDERTRACK", "270495", "mute", "1").then((result) => {
-              setMessage(result);
-              openSnackbar();
+            setValueTreeProperty("FOLDERTRACK", "283472", "solo", "1").then((result) => {
+              // setMessage(result);
+              // openSnackbar();
             });
           }}
         >
-          Mute
+          Solo Strings
         </Button>
         <Button
           variant="contained"
           sx={{ marginTop: 2 }}
           onClick={() => {
-            setValueTreeProperty("FOLDERTRACK", "270495", "mute", "0").then((result) => {
-              setMessage(result);
-              openSnackbar();
+            setValueTreeProperty("FOLDERTRACK", "283472", "solo", "0").then((result) => {
+              // setMessage(result);
+              // openSnackbar();
             });
           }}
         >
-          Un-mute
+          Un-solo Strings
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ marginTop: 2 }}
+          onClick={() => {
+            setValueTreeProperty("FOLDERTRACK", "283742", "solo", "1").then((result) => {
+              // setMessage(result);
+              // openSnackbar();
+            });
+          }}
+        >
+          solo Woodwinds
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ marginTop: 2 }}
+          onClick={() => {
+            setValueTreeProperty("FOLDERTRACK", "283742", "solo", "0").then((result) => {
+              // setMessage(result);
+              // openSnackbar();
+            });
+          }}
+        >
+          Un-solo Woodwinds
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ marginTop: 2 }}
+          onClick={() => {
+            setValueTreeProperty("TRACK", "283512", "solo", "1").then((result) => {
+              // setMessage(result);
+              // openSnackbar();
+            });
+          }}
+        >
+          Solo Violin 1b
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ marginTop: 2 }}
+          onClick={() => {
+            setValueTreeProperty("TRACK", "283512", "solo", "0").then((result) => {
+              // setMessage(result);
+              // openSnackbar();
+            });
+          }}
+        >
+          Un-solo Violin 1
         </Button>
       </CardActions>
-      <CardActions style={{ justifyContent: "center" }}>
+      {/* <CardActions style={{ justifyContent: "center" }}>
         <Button
           variant="contained"
           sx={{ marginTop: 2 }}
@@ -514,13 +562,13 @@ function App() {
         </Button>
         <MyItem></MyItem>
       </CardActions>
-      <br></br>
+      <br></br> */}
       
-      <CardActions style={{ justifyContent: "center" }}>
-        {/* Yannick, this is to highlight the frequencies of the audio signal. Not working anymore.
-          Maybe we could use this later, to highlight instead the instruments that are currently playing  */}
+      {/* Yannick, this is to highlight the frequencies of the audio signal. Not working anymore.
+        Maybe we could use this later, to highlight instead the instruments that are currently playing  */}
+      {/* <CardActions style={{ justifyContent: "center" }}>
         <FreqBandInfo></FreqBandInfo>
-      </CardActions>
+      </CardActions> */}
       <Snackbar
         open={open}
         autoHideDuration={6000}
