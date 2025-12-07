@@ -272,6 +272,11 @@ void LookAndFeel_V2::drawButtonText (Graphics& g, TextButton& button,
                                      bool /*shouldDrawButtonAsHighlighted*/, bool /*shouldDrawButtonAsDown*/)
 {
     Font font (getTextButtonFont (button, button.getHeight()));
+    
+    // workaround to draw correctly these special characters on all platforms
+    if (button.getButtonText().containsAnyOf("◀▶◁▷◂▸◃▹◄►◅▻⏩︎⏮"))
+        font.setTypefaceName("Courier New");
+    
     g.setFont (font);
     g.setColour (button.findColour (button.getToggleState() ? TextButton::textColourOnId
                                                             : TextButton::textColourOffId)
@@ -288,7 +293,7 @@ void LookAndFeel_V2::drawButtonText (Graphics& g, TextButton& button,
     if (textWidth > 0)
         g.drawFittedText (button.getButtonText(),
                           leftIndent, yIndent, textWidth, button.getHeight() - yIndent * 2,
-                          Justification::centred, 2);
+                          Justification::centred, 3);
 }
 
 void LookAndFeel_V2::drawTickBox (Graphics& g, Component& component,
