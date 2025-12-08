@@ -275,7 +275,11 @@ void LookAndFeel_V2::drawButtonText (Graphics& g, TextButton& button,
     
     // workaround to draw correctly these special characters on all platforms
     if (button.getButtonText().containsAnyOf("◀▶◁▷◂▸◃▹◄►◅▻⏩︎⏮"))
+#if JUCE_ANDROID
+        font.setTypefaceName("NotoSerif");
+#else
         font.setTypefaceName("Courier New");
+#endif
     
     g.setFont (font);
     g.setColour (button.findColour (button.getToggleState() ? TextButton::textColourOnId
