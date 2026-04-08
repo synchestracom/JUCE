@@ -1227,8 +1227,27 @@ private:
     {
         Font f { FontOptions{} };
         auto family = getStyleAttribute (xml, "font-family").unquoted();
-
-        if (family.isNotEmpty())
+        
+        // Synchestra fix to workaround Dorico's unprecise SVG exports
+        if (family == "Museo Slab")
+        {
+#if JUCE_WINDOWS
+            f.setTypefaceName ("Museo Slab 300");
+#elif JUCE_MAC
+            f.setTypefaceName ("Museo Slab");
+            f.setTypefaceStyle("300");
+#endif
+        }
+        else if (family == "Museo Sans")
+        {
+#if JUCE_WINDOWS
+            f.setTypefaceName ("Museo Sans 500");
+#elif JUCE_MAC
+            f.setTypefaceName ("Museo Sans");
+            f.setTypefaceStyle("500");
+#endif
+        }
+        else if (family.isNotEmpty())
             f.setTypefaceName (family);
 
         if (getStyleAttribute (xml, "font-style").containsIgnoreCase ("italic"))
