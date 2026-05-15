@@ -98,7 +98,44 @@ struct OnlineUnlockForm::OverlayComp final : public Component,
 
     void run() override
     {
-        result = form.status.attemptWebserverUnlock (email, password);
+        
+        // workaround for Synchestra
+        
+        // ignore JUCE's form.status response
+        // result = form.status.attemptWebserverUnlock (email, password);
+        
+        // loop on form.workProducts_statuses' response
+        result.succeeded = false;
+        result.errorMessage = "Please buy work to unlock it.";
+        for (auto& workProduct_status : form.workProducts_statuses)
+        {
+            auto _result = workProduct_status->attemptWebserverUnlock (email, password);
+            if (!_result.succeeded)
+            {
+                if (_result.errorMessage == "This product doesn't exist")
+                    continue;
+                else if (_result.errorMessage.contains("User didn't purchase this product"))
+                    continue;
+                else if (_result.errorMessage.startsWith("ProductID is incorrect."))
+                    // TODO delete
+                    continue;
+                else
+                {
+                    result.errorMessage = _result.errorMessage;
+                    break;
+                }
+            }
+            else
+            {
+                // user can (or already has) unlocked this work product
+                result.informativeMessage += "\n" + _result.informativeMessage;
+                result.succeeded = _result.succeeded;
+                workProduct_status->save(); // save license key on disk
+            }
+        }
+        if (result.succeeded)
+            result.errorMessage = ""; // ignore errors if at least one product succeeded
+        
         startTimer (100);
     }
 

@@ -87,6 +87,8 @@ public:
     Label message;
     TextEditor emailBox, passwordBox;
     TextButton registerButton, cancelButton;
+    
+    juce::OwnedArray<OnlineUnlockStatus> workProducts_statuses; // For Synchestra
 
 private:
     OnlineUnlockStatus& status;
