@@ -32,6 +32,10 @@
   ==============================================================================
 */
 
+// TODO delete
+#include <juce_product_unlocking/juce_product_unlocking.h>
+
+
 namespace juce
 {
 
@@ -234,6 +238,45 @@ StringArray JUCEApplicationBase::getCommandLineParameterArray()
 
 int JUCEApplicationBase::main (int argc, const char* argv[])
 {
+    
+    // TODO delete
+    
+    juce::StringArray args;
+
+    for (int i = 1; i < argc; ++i)
+        args.add (argv[i]);
+
+    if (args.size() != 5)
+    {
+        std::cout << "Requires 5 arguments: app-name user-email username machine-numbers private-key" << std::endl
+                  << "  app-name:         name of the product being unlocked" << std::endl
+                  << "  user-email:       user's email address" << std::endl
+                  << "  username:         name of the user. Careful not to allow any spaces!" << std::endl
+                  << "  machine-numbers:  a comma- or semicolon-separated list of all machine ID strings this user can run this product on (no whitespace between items!)" << std::endl
+                  << "  private-key:      the RSA private key corresponding to the public key you've used in the app" << std::endl
+                  << std::endl;
+
+        return 1;
+    }
+
+    if (! args[4].containsChar (','))
+    {
+        std::cout << "Not a valid RSA key!" << std::endl;
+        return 1;
+    }
+
+//! [Unlocker]
+    // args[0]: app-name
+    // args[1]: user-email
+    // args[2]: username
+    // args[3]: machine-numbers
+    // args[4]: private-key
+
+    std::cout << juce::KeyGeneration::generateKeyFile (args[0], args[1], args[2], args[3], juce::RSAKey (args[4])) << std::endl;
+
+    
+    return 0;
+    
     JUCE_AUTORELEASEPOOL
     {
         juce_argc = argc;
