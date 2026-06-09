@@ -216,7 +216,7 @@ OnlineUnlockForm::OnlineUnlockForm (OnlineUnlockStatus& s,
                                     bool overlayHasCancelButton)
     : message (String(), userInstructions),
       passwordBox (String(), getDefaultPasswordChar()),
-      registerButton (TRANS ("Register")),
+      registerButton (TRANS ("Unlock")),
       cancelButton (TRANS ("Cancel")),
       status (s),
       showOverlayCancelButton (overlayHasCancelButton)
@@ -256,7 +256,7 @@ OnlineUnlockForm::~OnlineUnlockForm()
 
 void OnlineUnlockForm::paint (Graphics& g)
 {
-    g.fillAll (Colours::lightgrey);
+    g.fillAll (Colours::grey);
 }
 
 void OnlineUnlockForm::resized()
