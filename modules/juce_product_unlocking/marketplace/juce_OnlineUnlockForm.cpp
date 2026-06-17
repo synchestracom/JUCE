@@ -77,7 +77,7 @@ struct OnlineUnlockForm::OverlayComp final : public Component,
 
     void paint (Graphics& g) override
     {
-        g.fillAll (Colours::white.withAlpha (0.97f));
+        g.fillAll (Colours::white.withAlpha (0.8f));
 
         g.setColour (Colours::black);
         g.setFont (15.0f);
@@ -106,7 +106,7 @@ struct OnlineUnlockForm::OverlayComp final : public Component,
         
         // loop on form.workProducts_statuses' response
         result.succeeded = false;
-        result.errorMessage = "Please buy work to unlock it.";
+        result.errorMessage = "Please buy work first. Then unlock it.";
         for (auto& workProduct_status : form.workProducts_statuses)
         {
             auto _result = workProduct_status->attemptWebserverUnlock (email, password);
@@ -146,21 +146,14 @@ struct OnlineUnlockForm::OverlayComp final : public Component,
 
         if (result.errorMessage.isNotEmpty())
         {
-            auto options = MessageBoxOptions::makeOptionsOk (MessageBoxIconType::WarningIcon,
-                                                             TRANS ("Registration Failed"),
-                                                             result.errorMessage,
-                                                             {},
-                                                             &form);
-            form.messageBox = AlertWindow::showScopedAsync (options, nullptr);
+            form.message.setText(result.errorMessage, juce::NotificationType::dontSendNotification);
         }
         else if (result.informativeMessage.isNotEmpty())
         {
-            auto options = MessageBoxOptions::makeOptionsOk (MessageBoxIconType::InfoIcon,
-                                                             TRANS ("Registration Complete!"),
-                                                             result.informativeMessage,
-                                                             {},
-                                                             &form);
-            form.messageBox = AlertWindow::showScopedAsync (options, nullptr);
+            form.message.setText(result.informativeMessage, juce::NotificationType::dontSendNotification);
+            form.registerButton.setVisible(false);
+            form.passwordBox.setVisible(false);
+            form.emailBox.setVisible(false);
         }
         else if (result.urlToLaunch.isNotEmpty())
         {
@@ -256,7 +249,7 @@ OnlineUnlockForm::~OnlineUnlockForm()
 
 void OnlineUnlockForm::paint (Graphics& g)
 {
-    g.fillAll (Colours::grey);
+    g.fillAll (Colour(0xFF333333));
 }
 
 void OnlineUnlockForm::resized()
@@ -269,14 +262,17 @@ void OnlineUnlockForm::resized()
     jassert (JUCEApplicationBase::isStandaloneApp() || findParentComponentOfClass<DialogWindow>() == nullptr);
 
     const int buttonHeight = 22;
+    
+    if (getLocalBounds().getHeight() < 1)
+        resetForm();
 
-    auto r = getLocalBounds().reduced (10, 20);
+    auto r = getLocalBounds().reduced (18, 18);
 
     auto buttonArea = r.removeFromBottom (buttonHeight);
     registerButton.changeWidthToFitText (buttonHeight);
     cancelButton.changeWidthToFitText (buttonHeight);
 
-    const int gap = 20;
+    const int gap = 15;
     buttonArea = buttonArea.withSizeKeepingCentre (registerButton.getWidth()
                                                      + (cancelButton.isVisible() ? gap + cancelButton.getWidth() : 0),
                                                    buttonHeight);
@@ -284,7 +280,7 @@ void OnlineUnlockForm::resized()
     buttonArea.removeFromLeft (gap);
     cancelButton.setBounds (buttonArea);
 
-    r.removeFromBottom (20);
+    r.removeFromBottom (18);
 
     // (force use of a default system font to make sure it has the password blob character)
     const auto typeface = Font::getDefaultTypefaceForFont (FontOptions (Font::getDefaultSansSerifFontName(),
@@ -293,12 +289,14 @@ void OnlineUnlockForm::resized()
     Font font (withDefaultMetrics (FontOptions { typeface }));
 
     const int boxHeight = 24;
-    passwordBox.setBounds (r.removeFromBottom (boxHeight));
+    static const int boxWidth = 250;
+    int boxLeftMargin = juce::jmax(0, (r.getWidth() - boxWidth) / 2);
+    passwordBox.setBounds (r.removeFromBottom (boxHeight).withTrimmedLeft(boxLeftMargin).withTrimmedRight(boxLeftMargin));
     passwordBox.setInputRestrictions (64);
     passwordBox.setFont (font);
 
-    r.removeFromBottom (20);
-    emailBox.setBounds (r.removeFromBottom (boxHeight));
+    r.removeFromBottom (18);
+    emailBox.setBounds (r.removeFromBottom (boxHeight).withTrimmedLeft(boxLeftMargin).withTrimmedRight(boxLeftMargin));
     emailBox.setInputRestrictions (512);
     emailBox.setFont (font);
 

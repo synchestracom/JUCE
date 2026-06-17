@@ -89,6 +89,14 @@ public:
     TextButton registerButton, cancelButton;
     
     juce::OwnedArray<OnlineUnlockStatus> workProducts_statuses; // For Synchestra
+    
+    void resetForm()
+    {
+        message.setText("Please provide your email and password.", juce::NotificationType::dontSendNotification);
+        registerButton.setVisible(true);
+        passwordBox.setVisible(true);
+        emailBox.setVisible(true);
+    }
 
 private:
     OnlineUnlockStatus& status;

@@ -470,15 +470,14 @@ OnlineUnlockStatus::UnlockResult OnlineUnlockStatus::handleFailedConnection()
 
 String OnlineUnlockStatus::getMessageForConnectionFailure (bool isInternetConnectionWorking)
 {
-    String message = TRANS ("Couldn't connect to XYZ").replace ("XYZ", getWebsiteName()) + "...\n\n";
+    String message;
 
     if (isInternetConnectionWorking)
         message << TRANS ("Your internet connection seems to be OK, but our webserver "
-                          "didn't respond... This is most likely a temporary problem, so try "
+                          "didn't respond... Please try "
                           "again in a few minutes, but if it persists, please contact us for support!");
     else
-        message << TRANS ("No internet sites seem to be accessible from your computer.. Before trying again, "
-                          "please check that your network is working correctly, and make sure "
+        message << TRANS ("Please check your internet connection, and make sure "
                           "that any firewall/security software installed on your machine isn't "
                           "blocking your web connection.");
 
