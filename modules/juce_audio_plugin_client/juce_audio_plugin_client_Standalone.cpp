@@ -82,7 +82,7 @@ public:
         appProperties.setStorageParameters (options);
     }
 
-    const String getApplicationName() override              { return appName; }
+    const String getApplicationName() override              { return appName + " v" + VERSION; }
     const String getApplicationVersion() override           { return JucePlugin_VersionString; }
     bool moreThanOneInstanceAllowed() override              { return false; }
     void anotherInstanceStarted (const String&) override    {}
