@@ -128,7 +128,12 @@ struct OnlineUnlockForm::OverlayComp final : public Component,
             else
             {
                 // user can (or already has) unlocked this work product
-                result.informativeMessage += "\n" + _result.informativeMessage;
+                
+                if (result.succeeded && _result.informativeMessage.contains("Movement"))
+                    // shorten message if user bought several movements
+                    _result.informativeMessage = _result.informativeMessage.fromFirstOccurrenceOf("Movement", true, false);
+                
+                result.informativeMessage += _result.informativeMessage + "\n";
                 result.succeeded = _result.succeeded;
                 workProduct_status->save(); // save license key on disk
             }
@@ -266,13 +271,13 @@ void OnlineUnlockForm::resized()
     if (getLocalBounds().getHeight() < 1)
         resetForm();
 
-    auto r = getLocalBounds().reduced (18, 18);
+    static int gap = 10;
+    auto r = getLocalBounds().reduced (gap, gap);
 
     auto buttonArea = r.removeFromBottom (buttonHeight);
     registerButton.changeWidthToFitText (buttonHeight);
     cancelButton.changeWidthToFitText (buttonHeight);
 
-    const int gap = 15;
     buttonArea = buttonArea.withSizeKeepingCentre (registerButton.getWidth()
                                                      + (cancelButton.isVisible() ? gap + cancelButton.getWidth() : 0),
                                                    buttonHeight);
@@ -280,7 +285,7 @@ void OnlineUnlockForm::resized()
     buttonArea.removeFromLeft (gap);
     cancelButton.setBounds (buttonArea);
 
-    r.removeFromBottom (18);
+    r.removeFromBottom (gap);
 
     // (force use of a default system font to make sure it has the password blob character)
     const auto typeface = Font::getDefaultTypefaceForFont (FontOptions (Font::getDefaultSansSerifFontName(),
@@ -295,14 +300,14 @@ void OnlineUnlockForm::resized()
     passwordBox.setInputRestrictions (64);
     passwordBox.setFont (font);
 
-    r.removeFromBottom (18);
+    r.removeFromBottom (gap);
     emailBox.setBounds (r.removeFromBottom (boxHeight).withTrimmedLeft(boxLeftMargin).withTrimmedRight(boxLeftMargin));
     emailBox.setInputRestrictions (512);
     emailBox.setFont (font);
 
-    r.removeFromBottom (20);
+    r.removeFromBottom (gap);
 
-    message.setBounds (r);
+    message.setBounds (getLocalBounds().withTrimmedBottom(50));
 
     if (unlockingOverlay != nullptr)
         unlockingOverlay->setBounds (getLocalBounds());
