@@ -936,6 +936,7 @@ private:
             }
 
             inputMutedChanged (shouldShowNotification);
+            toFront (true);
         }
 
         ~MainContentComponent() override
