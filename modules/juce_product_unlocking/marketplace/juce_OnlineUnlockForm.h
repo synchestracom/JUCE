@@ -92,7 +92,7 @@ public:
     
     void resetForm()
     {
-        message.setText("Please provide your email and password.", juce::NotificationType::dontSendNotification);
+        message.setText("Please provide your Synchestra email and password to unlock this work.", juce::NotificationType::dontSendNotification);
         registerButton.setVisible(true);
         passwordBox.setVisible(true);
         emailBox.setVisible(true);

@@ -214,7 +214,7 @@ OnlineUnlockForm::OnlineUnlockForm (OnlineUnlockStatus& s,
                                     bool overlayHasCancelButton)
     : message (String(), userInstructions),
       passwordBox (String(), getDefaultPasswordChar()),
-      registerButton (TRANS ("Unlock")),
+      registerButton (TRANS ("Unlock Work")),
       cancelButton (TRANS ("Cancel")),
       status (s),
       showOverlayCancelButton (overlayHasCancelButton)
