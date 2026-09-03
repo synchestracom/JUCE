@@ -6,7 +6,7 @@ audio plug-ins and plug-in hosts. JUCE can be easily integrated with existing
 projects via CMake, or can be used as a project generation tool via the
 [Projucer](#the-projucer), which supports exporting projects for Xcode (macOS
 and iOS), Visual Studio, Android Studio, and Linux Makefiles as well as
-containing a source code editor. 
+containing a source code editor.  
 
 ## Getting Started
 
