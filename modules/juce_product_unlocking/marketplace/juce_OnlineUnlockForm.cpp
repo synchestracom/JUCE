@@ -104,7 +104,7 @@ struct OnlineUnlockForm::OverlayComp final : public Component,
         // ignore JUCE's form.status response
         // result = form.status.attemptWebserverUnlock (email, password);
         
-        // loop on form.workProducts_statuses' response
+        // loop on form.workProducts_statuses' responses
         result.succeeded = false;
         result.errorMessage = "Please buy work first. Then unlock it.";
         for (auto& workProduct_status : form.workProducts_statuses)
@@ -112,12 +112,11 @@ struct OnlineUnlockForm::OverlayComp final : public Component,
             auto _result = workProduct_status->attemptWebserverUnlock (email, password);
             if (!_result.succeeded)
             {
-                if (_result.errorMessage == "This product doesn't exist")
+                if (_result.errorMessage == "This product doesn't exist.")
                     continue;
                 else if (_result.errorMessage.contains("User didn't purchase this product"))
                     continue;
                 else if (_result.errorMessage.startsWith("ProductID is incorrect."))
-                    // TODO delete
                     continue;
                 else
                 {
